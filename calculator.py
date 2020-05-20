@@ -2,13 +2,14 @@ from tkinter import *
 
 # Create the main window
 window = Tk()
-window.geometry('312x324')
 
 
 class Calculator:
     
     def __init__(self, window, title='Calculator'):
         self.window = window
+        self.window.geometry('462x374')
+        self.window.resizable(0,0)
         self.window.title('Calculator')
         self.expression = ''
         self.input_text = StringVar()
