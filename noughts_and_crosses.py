@@ -19,6 +19,7 @@ class Square:
         self.posY = posY
         self.font = game_font
         self.squareText = ''
+        self.change = True
         self.createSquare()
         
     def createSquare(self):
@@ -27,10 +28,16 @@ class Square:
         self.square.grid(row=self.posX, column=self.posY, padx=1, pady=1)
         
     def playerMove(self, player):
-        self.squareText = player.value
-        self.createSquare()
-        player.changeValue()
-        print(self.squareText)
+        if self.change:
+            self.squareText = player.value
+            self.createSquare()
+            player.changeValue()
+            self.change = False
+        else:
+            pass
+        
+    def getSquareValue(self):
+        return self.squareText
 
 class Player:
     def __init__(self):
@@ -56,12 +63,27 @@ class Player:
     
     def currentPlayer(self):
         self.text.set(f'The current player is: {self.value}')
+        
+class Game:
+    def __init__(self, frame, sizeX = 3, sizeY = 3):
+        self.sizeX = sizeX
+        self.sizeY = sizeY
+        self.frame = frame
+        self.createBoard()
+        
+    def createBoard(self):
+        board = []
+        for row in range(self.sizeX):
+            for col in range(self.sizeY):
+                id_no = row*3 + col
+                board.append(Square(self.frame, row, col, id_no, game_font))
+                
 
 player = Player()
 
-square1 = Square(input_frame, 0, 0, 1, game_font)
-square2 = Square(input_frame, 1, 1, 2, game_font)
-square3 = Square(input_frame, 2, 2, 3, game_font)
+#square1 = Square(input_frame, 0, 0, 1, game_font)
+#square2 = Square(input_frame, 1, 1, 2, game_font)
+#square3 = Square(input_frame, 2, 2, 3, game_font)
 
-
+game = Game(frame =input_frame)
 window.mainloop()
