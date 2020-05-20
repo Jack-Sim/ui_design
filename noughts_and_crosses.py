@@ -77,6 +77,7 @@ class Game:
         self.createBoard()
         self.text = StringVar()
         self.text.set('')
+        self.gameOver = False
         
     def createBoard(self):
         self.board = []
@@ -88,21 +89,27 @@ class Game:
                 self.board[row].append(Square(self.frame, row, col, id_no, game_font))
             print(self.board)
             
-    def checkBoard(self):
+    def getBoard(self):
         self.currentBoard = []
         for row in range(self.sizeX):
             self.currentBoard.append([])
             for col in range(self.sizeY):
                 self.currentBoard[row].append(self.board[row][col].squareText)
-                
         self.currentBoard = np.array(self.currentBoard)
-        print(str(np.unique(self.currentBoard[:,0])))
+            
+    def checkBoard(self):
+        self.getBoard()
         for row in range(self.sizeX):
             arr = self.currentBoard[row,:]
             self.checkArr(arr)
         for col in range(self.sizeY):
             arr = self.currentBoard[:,col]
             self.checkArr(arr)
+        arrD1 = self.currentBoard.diagonal()
+        arrD2 = np.fliplr(self.currentBoard).diagonal()
+        self.checkArr(arrD1)
+        self.checkArr(arrD2)
+        self.allClicked()
             
     def checkArr(self,arr):
         if len(np.unique(arr)) & (str(np.unique(arr)[0]) == 'X' or str(np.unique(arr)[0]) == '0'):
@@ -110,7 +117,30 @@ class Game:
             self.text.set(f'You\'ve WON {player.value}')
             win = Label(window, textvariable = self.text)
             win.pack()
-        
+            
+            #refreshButton = Button(window, text = 'Play Again?', command = self.refresh())
+            #refreshButton.pack()
+            for row in range(self.sizeX):
+                for col in range(self.sizeY):
+                    self.board[row][col].change = False
+    
+    def allClicked(self):
+        moves_left = 0
+        for row in range(self.sizeX):
+            for col in range(self.sizeY):
+                moves_left += self.board[row][col].change
+        print(moves_left)
+        if moves_left == 1:
+            self.text.set('The game is a Tie, try again?')
+            win = Label(window, textvariable = self.text)
+            win.pack()
+            #refreshButton = Button(window, text = 'Play Again?', command = lambda: self.refresh())
+            #refreshButton.pack()
+            
+    #def refresh(self):
+    #    window.destroy()
+    #    exec(open('./noughts_and_crosses.py').read()) 
+
 player = Player()
 
 game = Game(frame =input_frame)
