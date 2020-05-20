@@ -5,5 +5,6 @@ This is a repository to learn Tkinter and experiment with other UI tools in Pyth
 The projects in here include:
 - firstui.py: A first attempt using Tkinter to build a UI
 - calculator.py: A calculator UI that can do simple maths sums in
+- noughts_and-crosses.py: An implementation of noughts and crosses game in python
 
  

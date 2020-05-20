@@ -21,7 +21,10 @@ class Square:
         self.squareText = ''
         self.change = True
         self.createSquare()
-        
+
+    def __repr__(self):
+        return str(self.id)
+
     def createSquare(self):
         self.square = Button(self.frame, text=self.squareText, width=4, height=2, bd=0, bg='#eee', cursor='hand2', command = lambda: self.playerMove(player))
         self.square['font'] = self.font
@@ -47,9 +50,8 @@ class Player:
         self.whos_move = Label(window, textvariable = self.text)
         self.whos_move['font'] = font.Font(family='arial', size=18)
         self.whos_move.pack()
-        #self.currentPlayer()
         
-    def __repl__(self):
+    def __repr__(self):
         return self.value
     
     def changeValue(self):
@@ -72,12 +74,14 @@ class Game:
         self.createBoard()
         
     def createBoard(self):
-        board = []
+        self.board = []
         for row in range(self.sizeX):
+            self.board.append([])
+            
             for col in range(self.sizeY):
                 id_no = row*3 + col
-                board.append(Square(self.frame, row, col, id_no, game_font))
-                
+                self.board[row].append(Square(self.frame, row, col, id_no, game_font))
+            print(self.board)
 
 player = Player()
 
