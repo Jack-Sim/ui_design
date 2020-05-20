@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter.font as font
+import numpy as np
 
 window = Tk()
 window.title('Noughts and Crosses')
@@ -34,8 +35,10 @@ class Square:
         if self.change:
             self.squareText = player.value
             self.createSquare()
+            game.checkBoard()
             player.changeValue()
             self.change = False
+            
         else:
             pass
         
@@ -72,6 +75,8 @@ class Game:
         self.sizeY = sizeY
         self.frame = frame
         self.createBoard()
+        self.text = StringVar()
+        self.text.set('')
         
     def createBoard(self):
         self.board = []
@@ -82,12 +87,31 @@ class Game:
                 id_no = row*3 + col
                 self.board[row].append(Square(self.frame, row, col, id_no, game_font))
             print(self.board)
-
+            
+    def checkBoard(self):
+        self.currentBoard = []
+        for row in range(self.sizeX):
+            self.currentBoard.append([])
+            for col in range(self.sizeY):
+                self.currentBoard[row].append(self.board[row][col].squareText)
+                
+        self.currentBoard = np.array(self.currentBoard)
+        print(str(np.unique(self.currentBoard[:,0])))
+        for row in range(self.sizeX):
+            arr = self.currentBoard[row,:]
+            self.checkArr(arr)
+        for col in range(self.sizeY):
+            arr = self.currentBoard[:,col]
+            self.checkArr(arr)
+            
+    def checkArr(self,arr):
+        if len(np.unique(arr)) & (str(np.unique(arr)[0]) == 'X' or str(np.unique(arr)[0]) == '0'):
+            print(f'You\'ve WON {player.value}')
+            self.text.set(f'You\'ve WON {player.value}')
+            win = Label(window, textvariable = self.text)
+            win.pack()
+        
 player = Player()
-
-#square1 = Square(input_frame, 0, 0, 1, game_font)
-#square2 = Square(input_frame, 1, 1, 2, game_font)
-#square3 = Square(input_frame, 2, 2, 3, game_font)
 
 game = Game(frame =input_frame)
 window.mainloop()
