@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter.font as font
 import numpy as np
+import random
 
 window = Tk()
 window.title('Noughts and Crosses')
@@ -36,8 +37,11 @@ class Square:
             self.squareText = player.value
             self.createSquare()
             game.checkBoard()
-            player.changeValue()
-            self.change = False
+            if game.gameOver:
+                self.change = False
+            else:
+                player.changeValue()
+                self.change = False
             
         else:
             pass
@@ -68,7 +72,25 @@ class Player:
     
     def currentPlayer(self):
         self.text.set(f'The current player is: {self.value}')
+        if self.value == "0":
+            self.ai_move()
+
+    def ai_move(self):
+        empty = []
+        for i in range(game.sizeX):
+            for j in range(game.sizeY):
+                if game.currentBoard[i][j] == '':
+                    empty.append([i,j])
+        print(empty)
+        move = empty[random.randint(0,len(empty) - 1)]
+        game.board[move[0]][move[1]].squareText = '0'
+        game.board[move[0]][move[1]].createSquare()
+        game.checkBoard()
+        player.changeValue()
+        game.board[move[0]][move[1]].change = False
+
         
+
 class Game:
     def __init__(self, frame, sizeX = 3, sizeY = 3):
         self.sizeX = sizeX
@@ -114,6 +136,7 @@ class Game:
     def checkArr(self,arr):
         if len(np.unique(arr)) & (str(np.unique(arr)[0]) == 'X' or str(np.unique(arr)[0]) == '0'):
             print(f'You\'ve WON {player.value}')
+            self.gameOver = True
             self.text.set(f'You\'ve WON {player.value}')
             win = Label(window, textvariable = self.text)
             win.pack()
